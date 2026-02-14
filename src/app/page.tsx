@@ -1,101 +1,289 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import Link from "next/link";
+import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  Calendar,
+  Sparkles,
+  Users,
+  Building2,
+  Zap,
+  ChevronDown,
+} from "lucide-react";
+import { OPEN_INDUCTIONS } from "@/data/clubs";
+import { ClubCard } from "@/components/club-card";
+import { HeatMeter } from "@/components/ui/heat-meter";
+import { InductionTimeline } from "@/components/ui/timeline";
+
+const STATS = [
+  { value: 9, label: "Clubs", icon: Users },
+  { value: 1247, label: "Students", icon: Building2 },
+  { value: 4, label: "Active Inductions", icon: Zap },
+];
+
+export default function HomePage() {
+  const firstOpen = OPEN_INDUCTIONS[0];
+  const timelinePhases = firstOpen?.timeline ?? [];
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Background effects */}
+      <div className="pointer-events-none fixed inset-0 bg-[var(--background)]" />
+      <div
+        className="pointer-events-none fixed inset-0 opacity-40"
+        style={{ background: "var(--gradient-mesh)" }}
+      />
+      <div className="pointer-events-none fixed left-1/4 top-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
+      <div className="pointer-events-none fixed bottom-1/4 right-1/4 h-80 w-80 rounded-full bg-accent/10 blur-3xl" />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      <div className="relative">
+        {/* Hero */}
+        <section className="relative px-4 pt-16 pb-24 sm:px-6 sm:pt-24 lg:px-8 lg:pb-32">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mx-auto max-w-4xl text-center"
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <p className="mb-4 text-sm font-medium uppercase tracking-widest text-primary">
+              Induction Intelligence Engine
+            </p>
+            <h1 className="font-hero text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+              <span className="gradient-text">
+                One Platform for Every Campus Opportunity
+              </span>
+            </h1>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground">
+              Simplifying club inductions with intelligence and design.
+            </p>
+            <motion.div
+              className="mt-10 flex flex-wrap items-center justify-center gap-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              <Link
+                href="/clubs"
+                className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3.5 font-semibold text-primary-foreground shadow-glow transition hover:opacity-90"
+              >
+                Explore Inductions
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+              <Link
+                href="/clubs"
+                className="inline-flex items-center gap-2 rounded-xl border border-primary/50 bg-primary/10 px-6 py-3.5 font-semibold text-primary transition hover:bg-primary/20"
+              >
+                Register Your Club
+              </Link>
+            </motion.div>
+            <motion.div
+              className="mt-16 flex justify-center"
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <ChevronDown className="h-8 w-8 text-muted-foreground" />
+            </motion.div>
+          </motion.div>
+        </section>
+
+        {/* Stats */}
+        <section className="border-y border-white/10 bg-white/5 py-12">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <motion.div
+              className="grid grid-cols-1 gap-8 sm:grid-cols-3"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              {STATS.map((stat) => {
+                const Icon = stat.icon;
+                return (
+                  <div
+                    key={stat.label}
+                    className="flex flex-col items-center text-center"
+                  >
+                    <Icon className="mb-2 h-8 w-8 text-primary" />
+                    <span className="font-hero text-4xl font-bold text-foreground">
+                      {stat.value}
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      {stat.label}
+                    </span>
+                  </div>
+                );
+              })}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Trending Inductions */}
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
           >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            <h2 className="font-display text-3xl font-semibold text-foreground">
+              Trending Inductions
+            </h2>
+            <p className="mt-2 text-muted-foreground">
+              Open now — apply before deadlines.
+            </p>
+          </motion.div>
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
+            {OPEN_INDUCTIONS.slice(0, 4).map((club, i) => (
+              <ClubCard key={club.id} club={club} index={i} />
+            ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link
+              href="/clubs"
+              className="inline-flex items-center gap-2 text-primary hover:underline"
+            >
+              View all open inductions <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </section>
+
+        {/* Heat Map Overview */}
+        <section className="border-t border-white/10 bg-white/[0.02] py-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <motion.h2
+              className="font-display text-3xl font-semibold text-foreground"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              Induction Heat Map
+            </motion.h2>
+            <p className="mt-2 text-muted-foreground">
+              Competition level across open inductions
+            </p>
+            <motion.div
+              className="mt-8 flex flex-wrap justify-center gap-8"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              {OPEN_INDUCTIONS.map((club) => (
+                <div
+                  key={club.id}
+                  className="glass-card flex flex-col items-center gap-2 rounded-xl p-6"
+                >
+                  <p className="text-center text-sm font-medium text-foreground">
+                    {club.name.split(" ")[0]}
+                  </p>
+                  <HeatMeter
+                    applications={club.applicationsCount ?? 0}
+                    seats={club.seats ?? 1}
+                    size="md"
+                  />
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+
+        {/* AI Recommended */}
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="flex items-center gap-2"
+          >
+            <Sparkles className="h-8 w-8 text-primary" />
+            <h2 className="font-display text-3xl font-semibold text-foreground">
+              AI Recommended For You
+            </h2>
+          </motion.div>
+          <p className="mt-2 text-muted-foreground">
+            Based on your skills and interests (prototype scoring).
+          </p>
+          <motion.div
+            className="mt-8 flex flex-wrap gap-6"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            {OPEN_INDUCTIONS.slice(0, 3).map((club, index) => (
+              <Link
+                key={club.id}
+                href="/clubs"
+                className="glass-card flex flex-1 min-w-[200px] flex-col items-center gap-3 rounded-xl border border-primary/20 p-6 transition hover:border-primary/40"
+              >
+                <span className="font-hero text-2xl font-bold text-primary">
+                  {85 - index * 5}%
+                </span>
+                <p className="text-center text-sm font-medium text-foreground">
+                  {club.name.split("(")[0].trim()}
+                </p>
+              </Link>
+            ))}
+          </motion.div>
+          <div className="mt-6">
+            <Link
+              href="/ai-advisor"
+              className="inline-flex items-center gap-2 text-primary hover:underline"
+            >
+              Get full AI recommendations <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </section>
+
+        {/* Timeline Preview */}
+        <section className="border-t border-white/10 bg-white/[0.02] py-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              className="flex items-center gap-2"
+            >
+              <Calendar className="h-8 w-8 text-primary" />
+              <h2 className="font-display text-3xl font-semibold text-foreground">
+                Induction Timeline
+              </h2>
+            </motion.div>
+            <p className="mt-2 text-muted-foreground">
+              Typical flow: Application → Screening → Interview → Results
+            </p>
+            <motion.div
+              className="mt-8 rounded-2xl glass-card border border-white/10 p-8"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            >
+              <InductionTimeline phases={timelinePhases} />
+            </motion.div>
+          </div>
+        </section>
+
+        {/* CTA */}
+        <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+          <motion.div
+            className="rounded-3xl border border-primary/30 bg-primary/5 py-16 text-center"
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            <h2 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">
+              Ready to join?
+            </h2>
+            <p className="mx-auto mt-2 max-w-md text-muted-foreground">
+              Browse clubs and register in one click.
+            </p>
+            <Link
+              href="/clubs"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition hover:opacity-90"
+            >
+              Go to Clubs
+              <ArrowRight className="h-5 w-5" />
+            </Link>
+          </motion.div>
+        </section>
+      </div>
     </div>
   );
 }

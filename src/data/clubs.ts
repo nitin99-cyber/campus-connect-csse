@@ -3,7 +3,7 @@ import type { Club } from "@/types";
 export const OPEN_INDUCTIONS: Club[] = [
   {
     id: "csse",
-    name: "Computer Society of Software Engineers (CSSE)",
+    name: "Computer Engineering Society",
     tagline: "Code. Build. Ship.",
     status: "open",
     deadline: "2025-03-15T23:59:59",
